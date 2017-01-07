@@ -1,0 +1,30 @@
+server:
+  port: 9411
+
+management:
+  context-path: /admin
+
+logging:
+  level:
+    com.netflix.discovery: 'OFF'
+    org.springframework.cloud: 'INFO'
+
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    statusPageUrlPath: /admin/info
+    healthCheckUrlPath: /admin/health
+
+spring:
+  rabbitmq.addresses: localhost:5672
+  datasource:
+    #schema: classpath:/mysql.sql
+    #url: jdbc:mysql://${MYSQL_HOST:localhost}/zipkin
+    #username: zipkin
+    #password: 12345678
+    #initialize: true
+    #continueOnError: true
+  sleuth:
+    sampler.percentage: 1.0
+
+zipkin.storage.type: mem

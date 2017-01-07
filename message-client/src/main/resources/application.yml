@@ -1,0 +1,21 @@
+server:
+  port: 8082
+
+management:
+  context-path: /admin
+
+logging:
+  level:
+    com.netflix.discovery: 'DEBUG'
+    org.springframework.cloud: 'DEBUG'
+
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    statusPageUrlPath: /admin/info
+    healthCheckUrlPath: /admin/health
+
+spring:
+  rabbitmq.addresses: localhost:5672
+  cloud:
+    stream.bindings.output.destination: messages

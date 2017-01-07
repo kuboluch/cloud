@@ -1,0 +1,13 @@
+server:
+  port: 8761
+
+management:
+  context-path: /admin
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+  server:
+    waitTimeInMsWhenSyncEmpty: 0
+    #enable-self-preservation: false
