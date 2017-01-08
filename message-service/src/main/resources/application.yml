@@ -19,3 +19,11 @@ spring:
   rabbitmq.addresses: localhost:5672
   cloud:
     stream.bindings.input.destination: messages
+
+---
+
+spring:
+  profiles: test
+eureka:
+  client:
+    enabled: false

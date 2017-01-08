@@ -28,3 +28,11 @@ spring:
     sampler.percentage: 1.0
 
 zipkin.storage.type: mem
+
+---
+
+spring:
+  profiles: test
+eureka:
+  client:
+    enabled: false

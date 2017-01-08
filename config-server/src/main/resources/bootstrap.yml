@@ -5,3 +5,13 @@ spring:
     config:
       discovery:
         enabled: true
+
+---
+
+spring:
+  profiles: test
+  cloud:
+    config:
+      enabled: false
+      discovery:
+        enabled: false

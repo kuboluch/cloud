@@ -6,3 +6,13 @@ spring:
       discovery:
         enabled: true
         serviceId: config-server
+
+---
+
+spring:
+  profiles: test
+  cloud:
+    config:
+      enabled: false
+      discovery:
+        enabled: false
