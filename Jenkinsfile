@@ -1,5 +1,5 @@
 pipeline {
-  agent none
+  agent { label 'windows' }
   stages {
     stage('checkout') {
       steps {
@@ -8,10 +8,8 @@ pipeline {
     }
     stage('build') {
       steps {
-        node('windows') {
-          bat 'mvn --version'
-          bat 'mvn clean install'
-        }
+        bat 'mvn --version'
+        bat 'mvn clean install'
       }
     }
   }
