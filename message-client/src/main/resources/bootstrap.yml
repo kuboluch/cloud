@@ -2,17 +2,22 @@ spring:
   application:
     name: message-client
   cloud:
-    config:
-      discovery:
+    consul:
+      host: localhost
+      port: 8500
+      config:
         enabled: true
-        serviceId: config-server
+        prefix: configuration
+        defaultContext: apps
+        profileSeparator: '::'
 
 ---
 
 spring:
   profiles: test
   cloud:
-    config:
-      enabled: false
+    consul:
       discovery:
+        enabled: false
+      config:
         enabled: false

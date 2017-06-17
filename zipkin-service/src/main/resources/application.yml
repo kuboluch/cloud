@@ -16,6 +16,11 @@ eureka:
     healthCheckUrlPath: /admin/health
 
 spring:
+  cloud:
+    consul:
+      discovery:
+        healthCheckPath: ${management.context-path}/health
+        healthCheckInterval: 15s
   rabbitmq.addresses: localhost:5672
   datasource:
     #schema: classpath:/mysql.sql
@@ -28,11 +33,3 @@ spring:
     sampler.percentage: 1.0
 
 zipkin.storage.type: mem
-
----
-
-spring:
-  profiles: test
-eureka:
-  client:
-    enabled: false

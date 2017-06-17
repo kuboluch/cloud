@@ -9,15 +9,13 @@ logging:
     com.netflix.discovery: 'OFF'
     org.springframework.cloud: 'DEBUG'
 
-eureka:
-  instance:
-    leaseRenewalIntervalInSeconds: 10
-    statusPageUrlPath: /admin/info
-    healthCheckUrlPath: /admin/health
-
 spring:
   rabbitmq.addresses: localhost:5672
   cloud:
+    consul:
+      discovery:
+        healthCheckPath: ${management.context-path}/health
+        healthCheckInterval: 15s
     stream.bindings.input.destination: messages
 
 ---
