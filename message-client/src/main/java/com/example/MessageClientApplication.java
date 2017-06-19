@@ -40,62 +40,62 @@ public class MessageClientApplication {
     /**
      * the service with which we're communicating
      */
-    static final String MESSAGE_SERVICE_NAME = "message-service";
+        static final String MESSAGE_SERVICE_NAME = "message-service";
 
 
-    @Bean
-    Sampler sampler() {
-        return span -> true;
+        @Bean
+        Sampler sampler() {
+            return span -> true;
+        }
+
+        @Bean
+        RestTemplate restTemplate() {
+            return new RestTemplate();
+        }
+
+
+        public static void main(String[] args) {
+            new SpringApplicationBuilder(MessageClientApplication.class)
+                    .listeners(
+                            new ApplicationPidFileWriter(SERVICE_NAME + ".pid"),
+                            new EmbeddedServerPortFileWriter(SERVICE_NAME + ".port"))
+                    .run(args);
+        }
     }
 
-    @Bean
-    RestTemplate restTemplate() {
-        return new RestTemplate();
+    @MessageEndpoint
+    class MessageProcessor {
+
+        private Log log = LogFactory.getLog(getClass());
+
+        @ServiceActivator(inputChannel = Sink.INPUT)
+        public void onMessage(String msg) {
+            this.log.info("received message: '" + msg + "'.");
+        }
     }
 
+    @FeignClient(serviceId = MessageClientApplication.MESSAGE_SERVICE_NAME)
+    interface RestMessageReader {
 
-    public static void main(String[] args) {
-        new SpringApplicationBuilder(MessageClientApplication.class)
-                .listeners(
-                        new ApplicationPidFileWriter(SERVICE_NAME + ".pid"),
-                        new EmbeddedServerPortFileWriter(SERVICE_NAME + ".port"))
-                .run(args);
+        @RequestMapping(
+                method = RequestMethod.GET,
+                value = "/",
+                consumes = MediaType.APPLICATION_JSON_VALUE)
+        Map<String, String> readMessage();
     }
-}
 
-@MessageEndpoint
-class MessageProcessor {
+    @RestController
+    @RequestMapping("/message")
+    class MessageClientRestController {
 
-    private Log log = LogFactory.getLog(getClass());
+        private final RestTemplate restTemplate;
 
-    @ServiceActivator(inputChannel = Sink.INPUT)
-    public void onMessage(String msg) {
-        this.log.info("received message: '" + msg + "'.");
-    }
-}
+        private final RestMessageReader restReader;
 
-@FeignClient(serviceId = MessageClientApplication.MESSAGE_SERVICE_NAME)
-interface RestMessageReader {
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/",
-            consumes = MediaType.APPLICATION_JSON_VALUE)
-    Map<String, String> readMessage();
-}
-
-@RestController
-@RequestMapping("/message")
-class MessageClientRestController {
-
-    private final RestTemplate restTemplate;
-
-    private final RestMessageReader restReader;
-
-    @Autowired
-    public MessageClientRestController(RestTemplate restTemplate, RestMessageReader restReader) {
-        this.restTemplate = restTemplate;
-        this.restReader = restReader;
+        @Autowired
+        public MessageClientRestController(RestTemplate restTemplate, RestMessageReader restReader) {
+            this.restTemplate = restTemplate;
+            this.restReader = restReader;
     }
 
     @RequestMapping("/template")
